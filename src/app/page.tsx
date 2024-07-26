@@ -1,7 +1,11 @@
+import Navbar from "@/components/navigation/Navbar";
+import Billboard from "@/components/sections/Billboard";
+
 export default function Home() {
   return (
-    <main className="">
-      <h1>Home Page</h1>
-    </main>
+    <>
+      <Navbar />
+      <Billboard />
+    </>
   );
 }

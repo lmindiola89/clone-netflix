@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
-import prismadb from "@/lib/prismadb";
+import prismadb from "@/db/prismadb";
 import { compare } from "bcrypt";
 
 export const authOptions = {

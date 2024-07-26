@@ -31,7 +31,7 @@ function Login() {
       });
       console.log(res);
 
-      router.push("/");
+      router.push("/client/profiles");
     } catch (error) {
       console.log(error);
     }
@@ -45,6 +45,7 @@ function Login() {
         password,
       });
       // console.log(res.data);
+      setVariant("login");
     } catch (error) {
       const err = error as AxiosError;
       console.log(err.response?.data);
@@ -107,13 +108,17 @@ function Login() {
           {variant === "login" && (
             <div className="flex flex-row items-center gap-4 mt-5 justify-center">
               <div
-                onClick={() => signIn("google", { callbackUrl: "/" })}
+                onClick={() =>
+                  signIn("google", { callbackUrl: "/client/profiles" })
+                }
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
               >
                 <FcGoogle size={32} />
               </div>
               <div
-                onClick={() => signIn("github", { callbackUrl: "/" })}
+                onClick={() =>
+                  signIn("github", { callbackUrl: "/client/profiles" })
+                }
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
               >
                 <FaGithub size={32} />
