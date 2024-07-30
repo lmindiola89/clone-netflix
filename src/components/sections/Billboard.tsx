@@ -3,11 +3,14 @@ import useMoviesRandom from "@/hooks/useMoviesRandom";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 
 function Billboard() {
-  const { isLoading, data } = useMoviesRandom();
+  const {
+    // isLoading,
+    data,
+  } = useMoviesRandom();
 
   // if (isLoading) return <div>Loading...</div>;
 
-  console.log(data?.title);
+  // console.log(data?.title);
 
   return (
     <div className="relative h-[56.25vw]">

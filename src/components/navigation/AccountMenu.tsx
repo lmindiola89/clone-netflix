@@ -7,7 +7,11 @@ interface Props {
 }
 
 function AccountMenu({ visible }: Props) {
-  const { data: session, status, update } = useSession();
+  const {
+    data: session,
+    //  status,
+    //  update
+  } = useSession();
 
   if (!visible) {
     return null;

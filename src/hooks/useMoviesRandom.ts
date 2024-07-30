@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Movie } from "@/types";
 
 async function fetch() {
-  const { data } = await endpoint.get<Movie>("/moviesRandom");
+  const { data } = await endpoint.get<Movie>("moviesRandom");
   return data;
 }
 

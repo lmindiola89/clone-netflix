@@ -6,7 +6,7 @@ import Label from "@/components/ui/Label";
 import axios, { AxiosError } from "axios";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaRegTimesCircle } from "react-icons/fa";
 
 function Login() {
   const router = useRouter();
@@ -22,22 +22,22 @@ function Login() {
     );
   }, []);
 
-  const login = useCallback(async () => {
+  const userLogin = useCallback(async () => {
     try {
       const res = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
-      console.log(res);
-
+      console.log(res?.error);
       router.push("/client/profiles");
+      router.refresh();
     } catch (error) {
       console.log(error);
     }
   }, [email, password, router]);
 
-  const register = useCallback(async () => {
+  const userRegister = useCallback(async () => {
     try {
       const res = await axios.post("/api/register", {
         email,
@@ -46,11 +46,12 @@ function Login() {
       });
       // console.log(res.data);
       setVariant("login");
+      router.refresh();
     } catch (error) {
       const err = error as AxiosError;
       console.log(err.response?.data);
     }
-  }, [email, name, password]);
+  }, [email, name, password, router]);
 
   return (
     <div className="flex justify-center">
@@ -58,7 +59,6 @@ function Login() {
         <h2 className="text-white text-4xl mb-8 font-semibold">
           {variant === "login" ? "Sign in" : "Register"}
         </h2>
-
         <div className="flex flex-col gap-4">
           {variant === "register" && (
             <div className="relative ">
@@ -73,7 +73,6 @@ function Login() {
               <Label htmlFor="name">{"Username"}</Label>
             </div>
           )}
-
           <div className="relative ">
             <Input
               id="email"
@@ -84,8 +83,11 @@ function Login() {
               }}
             />
             <Label htmlFor="email">{"Email address"}</Label>
+            <div className="text-red-500 flex items-center mt-2">
+              <FaRegTimesCircle size={15} />
+              <span className="text-xs ml-1">error</span>
+            </div>
           </div>
-
           <div className="relative ">
             <Input
               id="password"
@@ -96,36 +98,33 @@ function Login() {
               }}
             />
             <Label htmlFor="password">{"Password"}</Label>
+            <div className="text-red-500 flex items-center mt-2">
+              <FaRegTimesCircle size={15} />
+              <span className="text-xs ml-1">error</span>
+            </div>
           </div>
-
           <button
-            onClick={variant === "login" ? login : register}
+            onClick={variant === "login" ? userLogin : userRegister}
             className="bg-red-600 py-3 text-white rounded-md w-full mt-5 hover:bg-red-700 transition"
           >
             {variant === "login" ? "Login" : "Sign up"}
           </button>
-
           {variant === "login" && (
             <div className="flex flex-row items-center gap-4 mt-5 justify-center">
               <div
-                onClick={() =>
-                  signIn("google", { callbackUrl: "/client/profiles" })
-                }
+                onClick={() => signIn("google", { callbackUrl: "/" })}
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
               >
                 <FcGoogle size={32} />
               </div>
               <div
-                onClick={() =>
-                  signIn("github", { callbackUrl: "/client/profiles" })
-                }
+                onClick={() => signIn("github", { callbackUrl: "/" })}
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
               >
                 <FaGithub size={32} />
               </div>
             </div>
           )}
-
           <p className="text-neutral-500 mt-5 text-sm">
             {variant === "login"
               ? "First time using Netflix?"
