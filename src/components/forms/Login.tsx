@@ -1,124 +1,187 @@
 "use client";
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Input from "@/components/ui/Input";
-import Label from "@/components/ui/Label";
-import axios, { AxiosError } from "axios";
+import { useForm } from "react-hook-form";
+import endpoint from "@/lib/endpoints";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaRegTimesCircle } from "react-icons/fa";
 
+type Inputs = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 function Login() {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const [variant, setVariant] = useState("login");
+  const [error, setError] = useState("");
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    clearErrors,
+  } = useForm<Inputs>();
 
   const toggleVariant = useCallback(() => {
     setVariant((currentVariant) =>
       currentVariant === "login" ? "register" : "login"
     );
-  }, []);
+    clearErrors();
+    setError("");
+  }, [clearErrors, setError]);
 
-  const userLogin = useCallback(async () => {
-    try {
+  const onSubmit = handleSubmit(async (data) => {
+    if (variant === "login") {
       const res = await signIn("credentials", {
-        email,
-        password,
+        email: data.email,
+        password: data.password,
         redirect: false,
       });
-      console.log(res?.error);
+      if (res?.error) setError(res?.error);
       router.push("/client/profiles");
       router.refresh();
-    } catch (error) {
-      console.log(error);
-    }
-  }, [email, password, router]);
-
-  const userRegister = useCallback(async () => {
-    try {
-      const res = await axios.post("/api/register", {
-        email,
-        name,
-        password,
-      });
-      // console.log(res.data);
+    } else {
+      await endpoint
+        .post("register", {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        })
+        .catch(function (error) {
+          setError(error.response.data.message);
+        });
       setVariant("login");
       router.refresh();
-    } catch (error) {
-      const err = error as AxiosError;
-      console.log(err.response?.data);
     }
-  }, [email, name, password, router]);
+  });
 
   return (
     <div className="flex justify-center">
-      <div className="bg-black bg-opacity-70 px-16 py-16 self-center mt-2 lg:w-2/5 sm:max-w-md rounded-md w-full">
+      <form
+        onSubmit={onSubmit}
+        className="bg-black bg-opacity-70 px-16 py-16 self-center mt-2 lg:w-2/5 sm:max-w-md rounded-md w-full"
+      >
         <h2 className="text-white text-4xl mb-8 font-semibold">
           {variant === "login" ? "Sign in" : "Register"}
         </h2>
-        <div className="flex flex-col gap-4">
-          {variant === "register" && (
-            <div className="relative ">
-              <Input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              />
-              <Label htmlFor="name">{"Username"}</Label>
-            </div>
-          )}
-          <div className="relative ">
-            <Input
+        {error && (
+          <p className="text-red-500 text-xs pb-2 flex items-center">
+            <FaRegTimesCircle size={15} className="mr-1" />
+            {error}
+          </p>
+        )}
+        <div className="flex flex-col gap-2">
+          <div className="relative">
+            <input
               id="email"
               type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              className={`mb-2 rounded-md px-6 pt-6 pb-1 w-full text-md text-white bg-black bg-opacity-40 focus:outline-offset-2 peer invalid:border-b-1" ${
+                !errors.email
+                  ? "border border-gray-400"
+                  : "border border-red-600 focus:outline-none"
+              } `}
+              placeholder=" "
+              {...register("email", {
+                required: {
+                  value: true,
+                  message: "Email is required",
+                },
+              })}
             />
-            <Label htmlFor="email">{"Email address"}</Label>
-            <div className="text-red-500 flex items-center mt-2">
-              <FaRegTimesCircle size={15} />
-              <span className="text-xs ml-1">error</span>
-            </div>
+            <label
+              htmlFor="email"
+              className="absolute text-md text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-6 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+            >
+              Email address
+            </label>
+            {errors.email && (
+              <p className="text-red-500 text-xs flex items-center">
+                <FaRegTimesCircle size={15} className="mr-1" />
+                {errors.email.message}
+              </p>
+            )}
           </div>
-          <div className="relative ">
-            <Input
+          {variant === "register" && (
+            <div className="relative">
+              <input
+                id="name"
+                type="text"
+                className={`mb-2 rounded-md px-6 pt-6 pb-1 w-full text-md text-white bg-black bg-opacity-40 focus:outline-offset-2 peer invalid:border-b-1" ${
+                  !errors.name
+                    ? "border border-gray-400"
+                    : "border border-red-600 focus:outline-none"
+                } `}
+                placeholder=" "
+                {...register("name", {
+                  required: {
+                    value: true,
+                    message: "Username is required",
+                  },
+                })}
+              />
+              <label
+                htmlFor="name"
+                className="absolute text-md text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-6 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+              >
+                Username
+              </label>
+              {errors.name && (
+                <p className="text-red-500 text-xs flex items-center">
+                  <FaRegTimesCircle size={15} className="mr-1" />
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+          )}
+          <div className="relative">
+            <input
               id="password"
               type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              className={`mb-2 rounded-md px-6 pt-6 pb-1 w-full text-md text-white bg-black bg-opacity-40 focus:outline-offset-2 peer invalid:border-b-1" ${
+                !errors.password
+                  ? "border border-gray-400"
+                  : "border border-red-600 focus:outline-none"
+              } `}
+              placeholder=" "
+              {...register("password", {
+                required: {
+                  value: true,
+                  message: "Password is required",
+                },
+              })}
             />
-            <Label htmlFor="password">{"Password"}</Label>
-            <div className="text-red-500 flex items-center mt-2">
-              <FaRegTimesCircle size={15} />
-              <span className="text-xs ml-1">error</span>
-            </div>
+            <label
+              htmlFor="password"
+              className="absolute text-md text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-6 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+            >
+              Password
+            </label>
+            {errors.password && (
+              <p className="text-red-500 text-xs flex items-center">
+                <FaRegTimesCircle size={15} className="mr-1" />
+                {errors.password.message}
+              </p>
+            )}
           </div>
-          <button
-            onClick={variant === "login" ? userLogin : userRegister}
-            className="bg-red-600 py-3 text-white rounded-md w-full mt-5 hover:bg-red-700 transition"
-          >
+          <button className="bg-red-600 py-3 text-white rounded-md w-full mt-5 hover:bg-red-700 transition">
             {variant === "login" ? "Login" : "Sign up"}
           </button>
           {variant === "login" && (
             <div className="flex flex-row items-center gap-4 mt-5 justify-center">
               <div
-                onClick={() => signIn("google", { callbackUrl: "/" })}
+                onClick={() =>
+                  signIn("google", { callbackUrl: "/client/profiles" })
+                }
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
               >
                 <FcGoogle size={32} />
               </div>
               <div
-                onClick={() => signIn("github", { callbackUrl: "/" })}
+                onClick={() =>
+                  signIn("github", { callbackUrl: "/client/profiles" })
+                }
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
               >
                 <FaGithub size={32} />
@@ -138,7 +201,7 @@ function Login() {
             .
           </p>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

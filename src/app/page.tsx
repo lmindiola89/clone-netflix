@@ -2,7 +2,7 @@
 import Navbar from "@/components/navigation/Navbar";
 import Billboard from "@/components/sections/Billboard";
 import MoviesList from "@/components/sections/MoviesList";
-import useMoviesList from "@/hooks/useMoviesList";
+import { useMoviesList } from "@/hooks/useMovies";
 import { useMoviesFavorites } from "@/hooks/useMoviesFavorites";
 
 export default function Home() {
