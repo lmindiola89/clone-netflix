@@ -13,15 +13,20 @@ function ButtonFavorite({ movieId }: Props) {
   const mutation = useFavoriteMutation();
   const { data: moviesFavorites = [] } = useMoviesFavorites();
   const res = some(moviesFavorites, { id: movieId });
+  const style =
+    "cursor-pointer rounded-full transition hover:bg-white hover:border-2";
 
   return (
     <div
       onClick={() => {
         mutation.mutate({ movieId });
       }}
-      className="cursor-pointer w-6 h-6 lg:w-8 lg:h-8 bg-white rounded-full flex justify-center items-center transition hover:bg-neutral-500"
     >
-      {res === false ? <FaCirclePlus size={25} /> : <FaCircleCheck size={25} />}
+      {res === false ? (
+        <FaCirclePlus size={30} className={style} />
+      ) : (
+        <FaCircleCheck size={30} className={style} />
+      )}
     </div>
   );
 }
