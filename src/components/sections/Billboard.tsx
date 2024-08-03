@@ -1,9 +1,9 @@
 "use client";
-import useMoviesRandom from "@/hooks/useMoviesRandom";
-import { IoInformationCircleOutline, IoPlay } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import useMoviesRandom from "@/hooks/useMoviesRandom";
 import useInfoModalStore from "@/hooks/useInfoModalStore";
+import { IoInformationCircleOutline, IoPlay } from "react-icons/io5";
 
 function Billboard() {
   const router = useRouter();

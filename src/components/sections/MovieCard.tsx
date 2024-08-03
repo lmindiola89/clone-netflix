@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { Movie } from "@/types";
-import ButtonFavorite from "../ui/ButtonFavorite";
-import { FaCirclePlay } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+import { Movie } from "@/types";
+import { FaCirclePlay } from "react-icons/fa6";
+import ButtonFavorite from "../ui/ButtonFavorite";
 
 interface Props {
   data: Movie;
@@ -31,7 +31,7 @@ function MovieCard({ data }: Props) {
                 router.push(`/client/movie/${data.id}`);
               }}
               size={30}
-              className="cursor-pointer rounded-full transition hover:bg-white hover:border-2"
+              className="cursor-pointer rounded-full bg-white border-2 hover:bg-neutral-400 hover:border-neutral-400 transition"
             />
             <ButtonFavorite movieId={data.id} />
           </div>

@@ -2,9 +2,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 function profiles() {
   const { data: session, status, update } = useSession();
+  const router = useRouter();
 
   // if (status === "loading") return <div>Loading...</div>;
 
@@ -15,7 +17,11 @@ function profiles() {
           Who is watching?
         </h1>
         <div className="flex items-center justify-center gap-8 mt-10">
-          <div onClick={() => {}}>
+          <div
+            onClick={() => {
+              router.push("/");
+            }}
+          >
             <div className="group flex-row w-44 mx-auto">
               <div className="w-44 h-44 round flex items-center justify-center border-2 border-transparent group-hover:cursor-pointer group-hover:border-white overflow-hidden">
                 <img src="/images/default-blue.png" alt="Profile" />
