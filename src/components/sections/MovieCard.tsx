@@ -1,11 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import { Movie } from "@/types";
 import ButtonFavorite from "../ui/ButtonFavorite";
-import ButtonPlay from "../ui/ButtonPlay";
+import { FaCirclePlay } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+
 interface Props {
   data: Movie;
 }
 function MovieCard({ data }: Props) {
+  const router = useRouter();
   return (
     <div className="group bg-zinc-900 col-span relative h-[12vw]">
       <img
@@ -23,7 +26,13 @@ function MovieCard({ data }: Props) {
         />
         <div className="z-10 bg-zinc-800 p-2 lg:p-4 absolute w-full transition shadow-md rounded-b-md">
           <div className="flex flex-row items-center gap-3">
-            <ButtonPlay />
+            <FaCirclePlay
+              onClick={() => {
+                router.push(`/client/movie/${data.id}`);
+              }}
+              size={30}
+              className="cursor-pointer rounded-full transition hover:bg-white hover:border-2"
+            />
             <ButtonFavorite movieId={data.id} />
           </div>
           <p className="text-green-400 font-semibold mt-4">

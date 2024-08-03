@@ -14,7 +14,7 @@ function ButtonFavorite({ movieId }: Props) {
   const { data: moviesFavorites = [] } = useMoviesFavorites();
   const res = some(moviesFavorites, { id: movieId });
   const style =
-    "cursor-pointer rounded-full transition hover:bg-white hover:border-2";
+    "cursor-pointer rounded-full transition transition hover:bg-white hover:border-2";
 
   return (
     <div

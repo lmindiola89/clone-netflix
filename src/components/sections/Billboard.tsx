@@ -1,16 +1,18 @@
 "use client";
 import useMoviesRandom from "@/hooks/useMoviesRandom";
-import { AiOutlineInfoCircle } from "react-icons/ai";
+import { IoInformationCircleOutline, IoPlay } from "react-icons/io5";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import useInfoModalStore from "@/hooks/useInfoModalStore";
 
 function Billboard() {
-  const {
-    // isLoading,
-    data,
-  } = useMoviesRandom();
+  const router = useRouter();
+  const { data } = useMoviesRandom();
+  const { openModal } = useInfoModalStore();
 
-  // if (isLoading) return <div>Loading...</div>;
-
-  // console.log(data?.title);
+  const handleOpenModal = useCallback(() => {
+    openModal();
+  }, [openModal]);
 
   return (
     <div className="relative h-[56.25vw]">
@@ -30,12 +32,20 @@ function Billboard() {
           {data?.description}
         </p>
         <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
-          {/* <PlayButton movieId={data?.id} /> */}
           <button
-            // onClick={handleOpenModal}
-            className="bg-white text-white bg-opacity-30 rounded-md py-1 md:py-2 px-2 md:px-4w-auto text-xs lg:text-lg  font-semibold flex flex-row items-center hover:bg-opacity-20 transition"
+            onClick={() => {
+              router.push(`/client/movie/${data?.id}`);
+            }}
+            className="bg-white rounded-md py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold flex flex-row items-center hover:bg-neutral-300 transition"
           >
-            <AiOutlineInfoCircle className="w-4 md:w-7 mr-1" />
+            <IoPlay className="mr-2" size={22} />
+            Play
+          </button>
+          <button
+            onClick={handleOpenModal}
+            className="bg-white text-white bg-opacity-30 rounded-md py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold flex flex-row items-center hover:bg-opacity-20 transition"
+          >
+            <IoInformationCircleOutline className="mr-2" size={25} />
             More Info
           </button>
         </div>

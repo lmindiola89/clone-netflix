@@ -4,6 +4,7 @@ import Billboard from "@/components/sections/Billboard";
 import MoviesList from "@/components/sections/MoviesList";
 import { useMoviesList } from "@/hooks/useMovies";
 import { useMoviesFavorites } from "@/hooks/useMoviesFavorites";
+import InfoModal from "@/components/sections/InfoModal";
 
 export default function Home() {
   const { data: movies = [] } = useMoviesList();
@@ -11,6 +12,7 @@ export default function Home() {
 
   return (
     <>
+      <InfoModal />
       <Navbar />
       <Billboard />
       <div className="pb-40">

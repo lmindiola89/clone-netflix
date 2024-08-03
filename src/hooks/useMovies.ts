@@ -16,13 +16,13 @@ export function useMoviesList() {
 
 async function fetchId(ctx: QueryFunctionContext) {
   const [, idMovies] = ctx.queryKey;
-  const { data } = await endpoint.get<Movie[]>(`movies/${idMovies}`);
+  const { data } = await endpoint.get<Movie>(`movies/${idMovies}`);
   return data;
 }
 
-export function useMovieId() {
+export function useMovieId(idMovies: string) {
   return useQuery({
-    queryKey: ["moviesId"],
+    queryKey: ["moviesId", idMovies],
     queryFn: fetchId,
   });
 }
