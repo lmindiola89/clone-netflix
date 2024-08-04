@@ -44,7 +44,7 @@ function HomePage() {
               <input
                 id="email"
                 type="email"
-                className="mb-2 rounded-md text-md text-white bg-black bg-opacity-40 focus:outline-offset-2 peer invalid:border-b-1 border border-gray-400 h-14 w-96 px-6 pt-6 pb-1"
+                className="mb-2 rounded-md text-md text-white bg-black bg-opacity-40 focus:outline-offset-2 peer invalid:border-b-1 border border-gray-400 h-14 sm:w-72s lg:w-96 px-6 pt-6 pb-1"
                 placeholder=" "
               />
               <label
